@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,17 +21,23 @@ public class Main extends ApplicationAdapter {
     private Viewport view;
     private OrthographicCamera camera;
     private Texture background;
-    
+    private Texture platform;
+    private World world;
+    private Box2DDebugRenderer debugRenderer;
+    private Platform platformx;
     @Override
     public void create() {
+        platform = new Texture("platform.png");
+        world = new World(new Vector2(0, -10), true);
         background = new Texture("background.png");
         camera =  new OrthographicCamera(720, 1280);
         view = new FitViewport(720, 1280, camera);
         view.apply();
         camera.position.set(720/2f, 1280/2f, 0);
         batch = new SpriteBatch();
-
-        player = new Player(10, 10);
+        platformx = new Platform(world);
+        player = new Player(15, 40, world);
+        debugRenderer = new Box2DDebugRenderer();
     }
 
     @Override
@@ -40,13 +49,17 @@ public class Main extends ApplicationAdapter {
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
         camera.update();
+
         view.apply();
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
         batch.draw(background, 0, 0);
+        batch.draw(platform, 30, 30);
         player.drawPlayer(batch);
         batch.end();
+        world.step(1/60f, 6, 2);
+        debugRenderer.render(world, camera.combined);
     }
 
     @Override
@@ -62,13 +75,12 @@ public class Main extends ApplicationAdapter {
     }
 
     public void input(){
-        float speed = 40f;
-        float delta = Gdx.graphics.getDeltaTime();
-
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            player.incrementPosition(speed * delta, 0);
+            player.moveRight();
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            player.incrementPosition(-speed * delta, 0);
+            player.moveLeft();
+        } else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+            player.jump();
         }
     }
 }
