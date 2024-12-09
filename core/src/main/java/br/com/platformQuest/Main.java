@@ -1,5 +1,7 @@
 package br.com.platformQuest;
 
+import br.com.platformQuest.Entities.Platform;
+import br.com.platformQuest.Entities.Player;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -36,7 +38,7 @@ public class Main extends ApplicationAdapter {
         camera.position.set(720/2f, 1280/2f, 0);
         batch = new SpriteBatch();
         platformx = new Platform(world);
-        player = new Player(15, 40, world);
+        player = new Player(15, 10, world, new Texture("player/players.png"));
         debugRenderer = new Box2DDebugRenderer();
     }
 
@@ -56,7 +58,7 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(background, 0, 0);
         batch.draw(platform, 30, 30);
-        player.drawPlayer(batch);
+        player.draw(batch);
         batch.end();
         world.step(1/60f, 6, 2);
         debugRenderer.render(world, camera.combined);
@@ -79,7 +81,8 @@ public class Main extends ApplicationAdapter {
             player.moveRight();
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             player.moveLeft();
-        } else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
             player.jump();
         }
     }
