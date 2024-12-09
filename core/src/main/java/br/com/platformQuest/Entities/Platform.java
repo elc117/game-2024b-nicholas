@@ -1,31 +1,34 @@
 package br.com.platformQuest.Entities;
 
 import br.com.platformQuest.Helper.Constants;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
-import java.util.Queue;
 
+public class Platform extends Box2DEntity implements Update{
 
-public class Platform extends Box2DEntity{
-    private int secBeforeDrop = 10;
-    private long timestamp = 0;
-    private boolean isDroppable;
-    private Queue<Runnable> afterWordStep;
-    public Platform (float x, float y, World world, Texture tex) {
+    private int elapsedTime = 0;
+    private long timeStart = 0;
+    private boolean timerOn = false;
+    private static final int TIME_TO_WAIT = 1000;
+    BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/timerFont.fnt"), Gdx.files.internal("fonts/timerFont.png"), false);
+
+    public Platform(float x, float y, World world, Texture tex) {
         super(x, y, world, tex);
         this.bodyDef = new BodyDef();
         this.bodyDef.type = BodyDef.BodyType.StaticBody;
-        this.bodyDef.position.set(x,y);
+        this.bodyDef.position.set(x, y);
     }
 
     @Override
     public void createBody() {
-       this.body = this.world.createBody(bodyDef);
+        this.body = this.world.createBody(bodyDef);
     }
 
     @Override
@@ -46,39 +49,65 @@ public class Platform extends Box2DEntity{
     }
 
     public void startDropTimer() {
-        timestamp = TimeUtils.millis()/1000;
+        if (!timerOn) {
+            timeStart = TimeUtils.millis() / 1000;
+            timerOn = true;
+        }
     }
 
+    @Override
     public void update() {
-        if (isDroppable && timestamp != 0 && TimeUtils.millis() / 1000 - timestamp >= secBeforeDrop) {
-            afterWordStep.add(new Runnable() {
-                @Override
-                public void run() {
-                    body.setType(BodyDef.BodyType.DynamicBody);
-                }
-            });
-            isDroppable = false;
+        verifyTimer();
+        maybeDestroyObject();
+    }
+
+    private void verifyTimer() {
+        if (timerOn) {
+            elapsedTime = Math.abs((int) (TimeUtils.millis() / 1000 - (timeStart + TIME_TO_WAIT)));
+            if (elapsedTime <= 0) {
+                EntitiesManager.getInstance().scheduleAfterWorldStep(new Runnable() {
+                    @Override
+                    public void run() {
+                        body.setType(BodyDef.BodyType.DynamicBody);
+                    }
+                });
+                timerOn = false;
+            }
         }
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        update();
-        System.out.println("timeStamp: " + (TimeUtils.millis() / 1000 - timestamp));
         float adjustedX = (body.getPosition().x * Constants.PPM) - (texture.getWidth() / 2f);
         float adjustedY = (body.getPosition().y * Constants.PPM) - (texture.getHeight() / 2f);
-
         // Desenhar a textura na posição ajustada
         batch.draw(texture, adjustedX, adjustedY);
+        writeTimeInScreen(batch);
     }
 
-    public void setIsDroppable(boolean isDroppable) {
-        this.isDroppable = isDroppable;
+    private void writeTimeInScreen(SpriteBatch batch){
+        if(timerOn){
+            float centerX = body.getPosition().x * Constants.PPM;
+            float centerY = body.getPosition().y * Constants.PPM;
+            centerY = centerY - 18 - texture.getHeight()/2;
+            font.draw(batch, String.valueOf(elapsedTime),centerX , centerY);
+        }
     }
 
-    public void setAfterWordStep(Queue<Runnable> afterWordStep) {
-        this.afterWordStep = afterWordStep;
+    private void maybeDestroyObject() {
+        Runnable destroyOnRun = new Runnable() {
+            @Override
+            public void run() {
+                texture.dispose();
+                world.destroyBody(body);
+                EntitiesManager.getInstance().removeEntity(Platform.this);
+            }
+        };
+        if(body.getPosition().x < -1 || body.getPosition().x > 23){
+            EntitiesManager.getInstance().scheduleAfterWorldStep(destroyOnRun);
+        } else if(body.getPosition().y < -1 ){
+            EntitiesManager.getInstance().scheduleAfterWorldStep(destroyOnRun);
+        }
     }
-    
-    
+
 }

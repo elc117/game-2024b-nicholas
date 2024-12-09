@@ -16,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Player extends Box2DEntity{
 
+    private boolean dead = false;
+
     public Player(float x, float y, World world, Texture tex) {
         super(x, y, world, tex);
         this.bodyDef = new BodyDef();
