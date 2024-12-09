@@ -2,6 +2,8 @@ package br.com.platformQuest;
 
 import br.com.platformQuest.Entities.Platform;
 import br.com.platformQuest.Entities.Player;
+import br.com.platformQuest.Helper.CollisionsHandler;
+import br.com.platformQuest.Helper.Constants;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,6 +17,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -23,22 +27,34 @@ public class Main extends ApplicationAdapter {
     private Viewport view;
     private OrthographicCamera camera;
     private Texture background;
-    private Texture platform;
+    private Platform basePlatform;
+
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private Platform platformx;
+    private Queue<Runnable> performAfterWordStep;
     @Override
     public void create() {
-        platform = new Texture("platform.png");
+        performAfterWordStep = new LinkedList<Runnable>();
         world = new World(new Vector2(0, -10), true);
+        world.setContactListener(new CollisionsHandler());
         background = new Texture("background.png");
         camera =  new OrthographicCamera(720, 1280);
         view = new FitViewport(720, 1280, camera);
         view.apply();
         camera.position.set(720/2f, 1280/2f, 0);
         batch = new SpriteBatch();
-        platformx = new Platform(world);
+        basePlatform = new Platform(Constants.WIDTH / Constants.PPM / 2, 0, world, new Texture("platform.png"));
+        basePlatform.createBody();
+        basePlatform.createFixture(Constants.WIDTH / 2 / Constants.PPM, 1);
+        basePlatform.setIsDroppable(false);
+        platformx = new Platform(10, 7, world, new Texture("platform.png"));
+        platformx.createBody();
+        platformx.setAfterWordStep(performAfterWordStep);
+        platformx.createFixture(2, 1);
+        platformx.setIsDroppable(true);
         player = new Player(15, 10, world, new Texture("player/players.png"));
+        player.createFixture(0.5f, 1);
         debugRenderer = new Box2DDebugRenderer();
     }
 
@@ -57,11 +73,13 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         batch.draw(background, 0, 0);
-        batch.draw(platform, 30, 30);
+        basePlatform.draw(batch);
+        platformx.draw(batch);
         player.draw(batch);
         batch.end();
         world.step(1/60f, 6, 2);
-        debugRenderer.render(world, camera.combined);
+        if(performAfterWordStep.peek()!=null) performAfterWordStep.poll().run();
+        debugRenderer.render(world, camera.combined.scl(32));
     }
 
     @Override

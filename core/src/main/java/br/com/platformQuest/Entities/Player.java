@@ -21,34 +21,38 @@ public class Player extends Box2DEntity{
         this.bodyDef = new BodyDef();
         this.bodyDef.type = BodyDef.BodyType.DynamicBody;
         this.bodyDef.position.set(x,y);
+        this.bodyDef.fixedRotation = true;
         createBody();
-        createFixture();
     }
 
     @Override
-    protected void createBody() {
+    public void createBody() {
         this.body = this.world.createBody(bodyDef);
     }
 
     @Override
-    protected void createFixture() {
+    public void createFixture(float hx, float hy) {
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(1, 1);  // Defina o tamanho do corpo
+        shape.setAsBox(hx, hy);  // Defina o tamanho do corpo
 
         // Definindo as propriedades do fixture
         this.fixture = new FixtureDef();
         fixture.shape = shape;
-        fixture.density = 0.5f;
-        fixture.friction = 0.4f;
+        fixture.density = 0.9f;
+        fixture.friction = 0.7f;
         fixture.restitution = 0.1f;
 
         // Criando o fixture e aplicando no corpo
-        body.createFixture(fixture);
+        body.createFixture(fixture).setUserData(this);
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, body.getPosition().x * Constants.PPM, body.getPosition().y * Constants.PPM);
+        float adjustedX = (body.getPosition().x * Constants.PPM) - (texture.getWidth() / 2f);
+        float adjustedY = (body.getPosition().y * Constants.PPM) - (texture.getHeight() / 2f);
+
+        // Desenhar a textura na posição ajustada
+        batch.draw(texture, adjustedX, adjustedY);
     }
 
     public void dispose() {
@@ -58,7 +62,7 @@ public class Player extends Box2DEntity{
     public void jump() {
         // Adiciona um impulso vertical (pular)
         Vector2 velocity = body.getLinearVelocity();
-        if (Math.abs(velocity.y) < 0.01f) { // Verifica se está no chão (sem velocidade vertical)
+        if (Math.abs(velocity.y) == 0.0f) { // Verifica se está no chão (sem velocidade vertical)
             body.applyLinearImpulse(new Vector2(0, 25f), body.getWorldCenter(), true);
         }
     }
@@ -71,7 +75,8 @@ public class Player extends Box2DEntity{
         }
         if (body.getPosition().x <= 0.1) {
             // Reduz a velocidade (desacelera)
-            body.setLinearVelocity(new Vector2(Math.max(velocity.x, 0), velocity.y));
+            body.setLinearVelocity(new Vector2(0,0));
+            body.setTransform(new Vector2(0.2f, body.getPosition().y), 0);
         }
     }
 
@@ -83,7 +88,8 @@ public class Player extends Box2DEntity{
         }
         if (body.getPosition().x >= 21) {
             // Reduz a velocidade (desacelera)
-            body.setLinearVelocity(new Vector2(Math.min(velocity.x, 0), velocity.y));
+            body.setLinearVelocity(new Vector2(0,0));
+            body.setTransform(new Vector2(20.5f, body.getPosition().y), 0);
         }
     }
 }

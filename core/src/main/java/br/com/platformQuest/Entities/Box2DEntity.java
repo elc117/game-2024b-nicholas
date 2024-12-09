@@ -27,9 +27,9 @@ public class Box2DEntity {
         this.texture = tex;
     }
 
-    protected void createBody(){};
+    public void createBody(){};
 
-    protected void createFixture(){};
+    public void createFixture(float hx, float hy){};
 
-    protected void draw(SpriteBatch batch){};
+    public void draw(SpriteBatch batch){};
 }
