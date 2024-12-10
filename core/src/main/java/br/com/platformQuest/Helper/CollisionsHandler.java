@@ -22,9 +22,9 @@ public class CollisionsHandler implements ContactListener{
         Object objA = contact.getFixtureA().getUserData();
         Object objB = contact.getFixtureB().getUserData();
         if(objA instanceof Platform && objB instanceof Player){
-            ((Platform)objA).maybeDropPlatform();
+            ((Platform)objA).collisionWithPlayer();
         } else if (objA instanceof Player && objB instanceof Platform){
-            ((Platform)objB).maybeDropPlatform();
+            ((Platform)objB).collisionWithPlayer();
         }
     }
 

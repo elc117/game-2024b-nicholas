@@ -55,10 +55,12 @@ public class QuestionCreator {
     }
 
     public void selectRandomQuest(){
-        Random r = new Random();
-        int nextInt = r.nextInt(quests.size());
-        quest = quests.get(nextInt);
-        quests.remove(nextInt);
+        if (quests.size() > 0) {
+            Random r = new Random();
+            int nextInt = r.nextInt(quests.size());
+            quest = quests.get(nextInt);
+            quests.remove(nextInt);
+        }        
     }
 
     public static void draw(SpriteBatch batch){

@@ -27,7 +27,9 @@ public class Box2DEntity {
         this.texture = tex;
     }
 
-    public void createBody(){this.body = this.world.createBody(bodyDef);};
+    public void createBody(){
+        this.body = this.world.createBody(bodyDef);
+    };
 
     public void createFixture(float hx, float hy){};
 

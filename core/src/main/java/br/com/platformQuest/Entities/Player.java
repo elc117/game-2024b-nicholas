@@ -14,9 +14,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Player extends Box2DEntity{
+public class Player extends Box2DEntity implements Update{
 
-    private boolean dead = false;
+    private boolean live;
 
     public Player(float x, float y, World world, Texture tex) {
         super(x, y, world, tex);
@@ -24,6 +24,7 @@ public class Player extends Box2DEntity{
         this.bodyDef.type = BodyDef.BodyType.DynamicBody;
         this.bodyDef.position.set(x,y);
         this.bodyDef.fixedRotation = true;
+        this.live = true;
         createBody();
     }
 
@@ -68,12 +69,7 @@ public class Player extends Box2DEntity{
         // Aplica uma força para mover à esquerda
         Vector2 velocity = body.getLinearVelocity();
         if (velocity.x > -3) { // Limita a velocidade para -2 unidades/s
-            body.applyLinearImpulse(new Vector2(-1f, 0), body.getWorldCenter(), true);
-        }
-        if (body.getPosition().x <= 0.1) {
-            // Reduz a velocidade (desacelera)
-            body.setLinearVelocity(new Vector2(0,0));
-            body.setTransform(new Vector2(0.2f, body.getPosition().y), 0);
+            body.applyLinearImpulse(new Vector2(-2f, 0), body.getWorldCenter(), true);
         }
     }
 
@@ -81,12 +77,19 @@ public class Player extends Box2DEntity{
         // Aplica uma força para mover à direita
         Vector2 velocity = body.getLinearVelocity();
         if (velocity.x < 3) { // Limita a velocidade para 2 unidades/s
-            body.applyLinearImpulse(new Vector2(1f, 0), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(2f, 0), body.getWorldCenter(), true);
         }
-        if (body.getPosition().x >= 21) {
-            // Reduz a velocidade (desacelera)
-            body.setLinearVelocity(new Vector2(0,0));
-            body.setTransform(new Vector2(20.5f, body.getPosition().y), 0);
+    }
+
+    @Override
+    public void update() {
+        if(body.getPosition().y < 0) {
+            System.out.println("Player died!");
+            live = false;
         }
+    }
+
+    public boolean isAlive() {
+        return live;
     }
 }

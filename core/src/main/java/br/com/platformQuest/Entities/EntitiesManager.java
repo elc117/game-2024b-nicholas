@@ -19,12 +19,15 @@ import java.util.Random;
  * @author zorte
  */
 public class EntitiesManager {
+
     private static EntitiesManager instance;
     private final List<Box2DEntity> entities;
     private final Queue<Runnable> performAfterWorldStep;
     private final QuestionCreator questCreator;
     private World wrld;
-    
+    private Player player;
+    private float lastHeight = 0;
+
     private EntitiesManager() {
         entities = new ArrayList<>();
         performAfterWorldStep = new LinkedList<>();
@@ -54,13 +57,13 @@ public class EntitiesManager {
     public void executeScheduledActions() {
         while (!performAfterWorldStep.isEmpty()) {
             Runnable poll = performAfterWorldStep.poll();
-            if(poll != null){
+            if (poll != null) {
                 poll.run();
             }
         }
     }
 
-    public void drawEntities(SpriteBatch batch){
+    public void drawEntities(SpriteBatch batch) {
         entities.stream()
             .filter((t) -> t != null)
             .forEach((t) -> t.draw(batch));
@@ -70,7 +73,7 @@ public class EntitiesManager {
     public void updateEntities() {
         entities.stream()
             .filter((t) -> t instanceof Update)
-            .forEach((t) -> ((Update)t).update());
+            .forEach((t) -> ((Update) t).update());
     }
 
     public World getWrld() {
@@ -81,25 +84,55 @@ public class EntitiesManager {
         this.wrld = wrld;
     }
 
-    public void createPlatforms(){
-        Platform p1 = new Platform(5, 6, this.wrld, new Texture("platform.png"));
-        Platform p2 = new Platform(10, 6, this.wrld, new Texture("platform.png"));
-        p1.setResizable(true);
-        p2.setResizable(true);
-        
-        p1.createFixture(2, 1);
-        p2.createFixture(2, 1);
+    public void createPlatforms(float x1, float x2) {
+        scheduleAfterWorldStep(new Runnable() {
+            @Override
+            public void run() {
+                lastHeight += 6f;
+                Platform p1 = new Platform(x1, lastHeight, EntitiesManager.this.wrld, new Texture("platform.png"));
+                Platform p2 = new Platform(x2, lastHeight, EntitiesManager.this.wrld, new Texture("platform.png"));
+                p1.setResizable(true);
+                p2.setResizable(true);
 
-        Random r = new Random();
-        int rInt = r.nextInt(100);
-        if(rInt % 2 == 0){
-            p1.setAns(QuestionCreator.getQuest().getCorrectAnswer());
-            p2.setAns(QuestionCreator.getQuest().getWrongAnswer());
-        } else {
-            p2.setAns(QuestionCreator.getQuest().getCorrectAnswer());
-            p1.setAns(QuestionCreator.getQuest().getWrongAnswer());
-        }
-        entities.add(p2);
-        entities.add(p1);
+                p1.createFixture(2, 1);
+                p2.createFixture(2, 1);
+
+                Random r = new Random();
+                int rInt = r.nextInt(100);
+                if (rInt % 2 == 0) {
+                    p1.setAns(QuestionCreator.getQuest().getCorrectAnswer());
+                    p2.setAns(QuestionCreator.getQuest().getWrongAnswer());
+                } else {
+                    p2.setAns(QuestionCreator.getQuest().getCorrectAnswer());
+                    p1.setAns(QuestionCreator.getQuest().getWrongAnswer());
+                }
+                entities.add(p2);
+                entities.add(p1);
+            }
+        });
     }
+
+    public void playerHitCorrectAnswer() {
+        //deleta plataforma errada
+        entities.stream()
+            .filter((t) -> t instanceof Platform)
+            .filter((t) -> QuestionCreator.getQuest().getWrongAnswer().equals(((Platform) t).getAns()))
+            .forEach((t) -> ((Platform) t).destroyObject());
+
+        //seleciona nova pergunta
+        questCreator.selectRandomQuest();
+
+        //gera novas plataformas
+        float[] newPositions = Platform.generateNewPositions();
+        createPlatforms(newPositions[0], newPositions[1]);
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
 }

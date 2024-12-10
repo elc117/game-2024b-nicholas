@@ -1,8 +1,15 @@
 d:assets:assets:0:application/unknown:1
-t:assets.txt:assets-09950723734f2f8864e6ea8dc9f6aea3.txt:256:text/plain:1
+t:assets.txt:assets-c55c6d4d5f6ad41ed9c40f55ad4a7396.txt:364:text/plain:1
 i:background.png:background-8ddad7cb7ab8b234cc6a90112299efbb.png:298394:image/png:1
+i:bigPlatform.png:bigPlatform-f36efcbcbb30da69352499a81a2b24fa.png:8525:image/png:1
+d:fonts:fonts:0:application/unknown:1
+t:fonts/question.fnt:fonts/question-852bf29425b0e635595cea7c049eea5e.fnt:11101:application/unknown:1
+i:fonts/question.png:fonts/question-f77a5e9ce3587a6bde8540d0f2d8e716.png:31432:image/png:1
+t:fonts/timerFont.fnt:fonts/timerFont-f6e091535f6ff0dc60d3fa1670ff3a27.fnt:11102:application/unknown:1
+i:fonts/timerFont.png:fonts/timerFont-58629196ce80b5d50efd81f90cca168e.png:14316:image/png:1
 i:libgdx.png:libgdx-3708f33d27b8977682d1bc8504e6a821.png:2458:image/png:1
 i:platform.png:platform-f45d57014a3f14cc3b923fe29586f3a1.png:15695:image/png:1
+i:platforms.png:platforms-a43a709c239515399b2060a493b7e988.png:559560:image/png:1
 d:player:player:0:application/unknown:1
 b:player/player.piskel:player/player-2a510e68b88b1625e9ce79aff6c72e48.piskel:1130:application/unknown:1
 i:player/player.png:player/player-1a16fcfc8b1d0a9ce091caac3467998f.png:1814:image/png:1

@@ -13,14 +13,15 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
+import java.util.Random;
 
 public class Platform extends Box2DEntity implements Update {
 
     private int elapsedTime = 0;
-    private long timeStart = 0;
-    private boolean timerOn = false;
+    protected long timeStart = 0;
+    protected boolean timerOn = false;
     private boolean resizable = false;
-    private static final int TIME_TO_WAIT = 10;
+    private static final int TIME_TO_WAIT = 100;
     private Answer ans;
     BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/timerFont.fnt"), Gdx.files.internal("fonts/timerFont.png"), false);
 
@@ -49,21 +50,27 @@ public class Platform extends Box2DEntity implements Update {
         shape.dispose();
     }
 
-    public void maybeDropPlatform() {
-        if (QuestionCreator.getQuest().getCorrectAnswer().equals(this.ans) || this.ans == null) {
-            if (!timerOn) {
+    public void collisionWithPlayer() {
+        if (isTheRightPlatform()) {
+            if (!timerOn && isPlayerAbove()) {// start the timer to drop this platform
+                this.ans = null;
                 resizePlatform(Constants.WIDTH / Constants.PPM, 1, new Texture("bigPlatform.png"));
                 timeStart = TimeUtils.millis() / 1000;
                 timerOn = true;
+                EntitiesManager.getInstance().playerHitCorrectAnswer();//player hit the correct platform
             }
-        } else {
-            EntitiesManager.getInstance().scheduleAfterWorldStep(new Runnable() {
-                @Override
-                public void run() {
-                    body.setType(BodyDef.BodyType.DynamicBody);
-                }
-            });
+        } else if (isPlayerAbove()) {
+            dropPlatform();
         }
+    }
+
+    public void dropPlatform() {
+        EntitiesManager.getInstance().scheduleAfterWorldStep(new Runnable() {
+            @Override
+            public void run() {
+                body.setType(BodyDef.BodyType.DynamicBody);
+            }
+        });
     }
 
     @Override
@@ -72,19 +79,24 @@ public class Platform extends Box2DEntity implements Update {
         maybeDestroyObject();
     }
 
+    private boolean isTheRightPlatform() {
+        return QuestionCreator.getQuest().getCorrectAnswer().equals(this.ans);
+    }
+
     private void verifyTimer() {
         if (timerOn) {
             elapsedTime = Math.abs((int) (TimeUtils.millis() / 1000 - (timeStart + TIME_TO_WAIT)));
             if (elapsedTime <= 0) {
-                EntitiesManager.getInstance().scheduleAfterWorldStep(new Runnable() {
-                    @Override
-                    public void run() {
-                        body.setType(BodyDef.BodyType.DynamicBody);
-                    }
-                });
+                dropPlatform();
                 timerOn = false;
             }
         }
+    }
+
+    protected boolean isPlayerAbove() {
+        float yPlayer = EntitiesManager.getInstance().getPlayer().body.getPosition().y;
+        float yPlatform = this.body.getPosition().y;
+        return yPlayer + 0.5 > yPlatform;
     }
 
     @Override
@@ -107,6 +119,12 @@ public class Platform extends Box2DEntity implements Update {
     }
 
     private void maybeDestroyObject() {
+        if (body.getPosition().y < -1) {
+            destroyObject();
+        }
+    }
+
+    public void destroyObject() {
         Runnable destroyOnRun = new Runnable() {
             @Override
             public void run() {
@@ -116,11 +134,7 @@ public class Platform extends Box2DEntity implements Update {
                 EntitiesManager.getInstance().removeEntity(Platform.this);
             }
         };
-        if (body.getPosition().x < -1 || body.getPosition().x > 23) {
-            EntitiesManager.getInstance().scheduleAfterWorldStep(destroyOnRun);
-        } else if (body.getPosition().y < -1) {
-            EntitiesManager.getInstance().scheduleAfterWorldStep(destroyOnRun);
-        }
+        EntitiesManager.getInstance().scheduleAfterWorldStep(destroyOnRun);
     }
 
     public Answer getAns() {
@@ -174,4 +188,35 @@ public class Platform extends Box2DEntity implements Update {
         this.resizable = resizable;
     }
 
+    public static float[] generateNewPositions(){
+        float[] points = {-1f,-1f};
+        Random r = new Random();
+        while(isPointOutOfView(points[0])){
+            points[0] = r.nextFloat()*22.5f;
+            System.out.println("Ponto gerado no 1 while: " + points[0]);
+        }
+        while(isPointOutOfView(points[1]) || plataformIsAboveOther(points[0], points[1])){
+            System.out.println("Pontos gerados no 2 while: " + points[0] + " e " + points[1]);
+            points[1] = r.nextFloat()*22.5f;
+        }
+        System.out.println("Pontos gerados: " + points[0] + " e " + points[1]);
+        return points;
+    }
+
+    private static boolean isPointOutOfView(float p){
+        return p + 2 > 22.5f || p - 2 < 0;
+    }
+
+    private static boolean plataformIsAboveOther(float otherPlat, float p){
+        if(p > otherPlat){
+            return (p - otherPlat) < 6;
+        } else if(otherPlat > p){
+            return (otherPlat - p) < 6;
+        } else if(otherPlat == p){
+            return true;
+        } else {
+            System.out.println("Caso misterioso que nunca deve ocorrer!");
+            return false;
+        }
+    }
 }
