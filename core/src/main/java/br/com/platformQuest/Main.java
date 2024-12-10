@@ -31,7 +31,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
-        world = new World(new Vector2(0, -10), true);
+        world = new World(new Vector2(0, -12), true);
         world.setContactListener(new CollisionsHandler());
         background = new Texture("background.png");
         camera =  new OrthographicCamera(720, 1280);
@@ -40,6 +40,7 @@ public class Main extends ApplicationAdapter {
         camera.position.set(720/2f, 1280/2f, 0);
         batch = new SpriteBatch();
         debugRenderer = new Box2DDebugRenderer();
+        EntitiesManager.getInstance().setWrld(world);
         createStartEntities();
     }
 
@@ -47,18 +48,14 @@ public class Main extends ApplicationAdapter {
         player = new Player(15, 10, world, new Texture("player/players.png"));
         player.createFixture(0.5f, 1);
 
-        Platform basePlatform = new Platform(Constants.WIDTH / Constants.PPM / 2, 0, world, new Texture("platform.png"));
-        basePlatform.createBody();
-        basePlatform.createFixture(Constants.WIDTH / 2 / Constants.PPM, 2);
-
-        Platform smallPlatform = new Platform(10, 7, world, new Texture("platform.png"));
-        smallPlatform.createBody();
-        smallPlatform.createFixture(2, 1);
+        Platform basePlatform = new Platform(Constants.WIDTH / Constants.PPM / 2, 0, world, new Texture("bigPlatform.png"));
+        basePlatform.createFixture(Constants.WIDTH / 2 / Constants.PPM, 1);
         
         EntitiesManager eManager = EntitiesManager.getInstance();
         eManager.addEntity(player);
         eManager.addEntity(basePlatform);
-        eManager.addEntity(smallPlatform);
+
+        EntitiesManager.getInstance().createPlatforms();
     }
 
     @Override

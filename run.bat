@@ -1,0 +1,2 @@
+.\gradlew.bat run
+wait

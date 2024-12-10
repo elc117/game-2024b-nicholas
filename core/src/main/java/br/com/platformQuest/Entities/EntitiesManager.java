@@ -4,11 +4,15 @@
  */
 package br.com.platformQuest.Entities;
 
+import br.com.platformQuest.Questions.QuestionCreator;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.World;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 /**
  *
@@ -18,11 +22,14 @@ public class EntitiesManager {
     private static EntitiesManager instance;
     private final List<Box2DEntity> entities;
     private final Queue<Runnable> performAfterWorldStep;
-
-
+    private final QuestionCreator questCreator;
+    private World wrld;
+    
     private EntitiesManager() {
         entities = new ArrayList<>();
         performAfterWorldStep = new LinkedList<>();
+        this.questCreator = new QuestionCreator();
+        this.questCreator.selectRandomQuest();
     }
 
     public static synchronized EntitiesManager getInstance() {
@@ -57,11 +64,42 @@ public class EntitiesManager {
         entities.stream()
             .filter((t) -> t != null)
             .forEach((t) -> t.draw(batch));
+        QuestionCreator.QUESTION_FONT.draw(batch, QuestionCreator.getQuest().getQuestion(), 100, 1000);
     }
 
     public void updateEntities() {
         entities.stream()
             .filter((t) -> t instanceof Update)
             .forEach((t) -> ((Update)t).update());
+    }
+
+    public World getWrld() {
+        return wrld;
+    }
+
+    public void setWrld(World wrld) {
+        this.wrld = wrld;
+    }
+
+    public void createPlatforms(){
+        Platform p1 = new Platform(5, 6, this.wrld, new Texture("platform.png"));
+        Platform p2 = new Platform(10, 6, this.wrld, new Texture("platform.png"));
+        p1.setResizable(true);
+        p2.setResizable(true);
+        
+        p1.createFixture(2, 1);
+        p2.createFixture(2, 1);
+
+        Random r = new Random();
+        int rInt = r.nextInt(100);
+        if(rInt % 2 == 0){
+            p1.setAns(QuestionCreator.getQuest().getCorrectAnswer());
+            p2.setAns(QuestionCreator.getQuest().getWrongAnswer());
+        } else {
+            p2.setAns(QuestionCreator.getQuest().getCorrectAnswer());
+            p1.setAns(QuestionCreator.getQuest().getWrongAnswer());
+        }
+        entities.add(p2);
+        entities.add(p1);
     }
 }

@@ -28,11 +28,6 @@ public class Player extends Box2DEntity{
     }
 
     @Override
-    public void createBody() {
-        this.body = this.world.createBody(bodyDef);
-    }
-
-    @Override
     public void createFixture(float hx, float hy) {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(hx, hy);  // Defina o tamanho do corpo
@@ -40,10 +35,10 @@ public class Player extends Box2DEntity{
         // Definindo as propriedades do fixture
         this.fixture = new FixtureDef();
         fixture.shape = shape;
-        fixture.density = 0.9f;
+        fixture.density = 1f;
         fixture.friction = 0.7f;
         fixture.restitution = 0.1f;
-
+        
         // Criando o fixture e aplicando no corpo
         body.createFixture(fixture).setUserData(this);
     }
