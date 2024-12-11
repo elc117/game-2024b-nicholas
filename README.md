@@ -60,7 +60,7 @@ Essa é uma classe importante para o sistema de colisões, ela implementa a inte
 Essa classe é quem gerencia as perguntas, ela quando criada possui uma lista hardcoded com todas as perguntas do jogo, também possui um método que seleciona aleatoriamente uma dessas perguntas e "seta" como a pergunta atual, juntamente com um método que retorna a pergunta atual.
 
 ## Resultado final em um diagrama
-![diagrama em png](readmeFiles/diagram.png)
+![diagrama em png](readmeFiles/diagram2.png)
 
 ### Dificuldades
 
