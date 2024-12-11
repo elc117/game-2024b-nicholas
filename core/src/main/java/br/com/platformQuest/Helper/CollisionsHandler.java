@@ -4,7 +4,6 @@
  */
 package br.com.platformQuest.Helper;
 
-import br.com.platformQuest.Entities.Platform;
 import br.com.platformQuest.Entities.Player;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -21,10 +20,10 @@ public class CollisionsHandler implements ContactListener{
     public void beginContact(Contact contact) {
         Object objA = contact.getFixtureA().getUserData();
         Object objB = contact.getFixtureB().getUserData();
-        if(objA instanceof Platform && objB instanceof Player){
-            ((Platform)objA).collisionWithPlayer();
-        } else if (objA instanceof Player && objB instanceof Platform){
-            ((Platform)objB).collisionWithPlayer();
+        if(objA instanceof Collisions && objB instanceof Player){
+            ((Collisions)objA).collisionWithPlayer();
+        } else if (objA instanceof Player && objB instanceof Collisions){
+            ((Collisions)objB).collisionWithPlayer();
         }
     }
 

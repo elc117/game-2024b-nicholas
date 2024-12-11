@@ -34,4 +34,6 @@ public class Box2DEntity {
     public void createFixture(float hx, float hy){};
 
     public void draw(SpriteBatch batch){};
+
+    public void destroyObject() {};
 }

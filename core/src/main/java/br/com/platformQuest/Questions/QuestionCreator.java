@@ -19,43 +19,19 @@ import java.util.Random;
 public class QuestionCreator {
     public static final BitmapFont QUESTION_FONT = new BitmapFont(Gdx.files.internal("fonts/question.fnt"), Gdx.files.internal("fonts/question.png"), false);
     private static Question quest;
-    private static List<Question> quests = new ArrayList<>();
+    private final List<Question> quests = new ArrayList<>();
 
-    static {
-        // Adicionando questões hardcoded na lista questsSolved
-        quests.add(new Question(
-            "Qual e a capital da Franca?",
-            "Paris",
-            "Londres"
-        ));
-        quests.add(new Question(
-            "Quantos planetas existem no sistema solar?",
-            "8",
-            "9"
-        ));
-        quests.add(new Question(
-            "Quem escreveu 'Dom Quixote'?",
-            "Miguel de Cervantes",
-            "William Shakespeare"
-        ));
-        quests.add(new Question(
-            "Qual e o elemento quimico com simbolo 'O'?",
-            "Oxigenio",
-            "Ouro"
-        ));
-        quests.add(new Question(
-            "Quantos continentes existem no mundo?",
-            "7",
-            "6"
-        ));
+    public QuestionCreator (){
+        initQuests();
     }
+        
 
-    public static Question getQuest() {
+    public Question getActualQuest() {
         return quest;
     }
 
     public void selectRandomQuest(){
-        if (quests.size() > 0) {
+        if (!quests.isEmpty()) {
             Random r = new Random();
             int nextInt = r.nextInt(quests.size());
             quest = quests.get(nextInt);
@@ -63,9 +39,9 @@ public class QuestionCreator {
         }        
     }
 
-    public static void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch){
     // Criando o GlyphLayout para calcular o tamanho do texto
-    String question = QuestionCreator.getQuest().getQuestion();
+    String question = getActualQuest().getQuestion();
     GlyphLayout layout = new GlyphLayout();
     layout.setText(QuestionCreator.QUESTION_FONT, question);
 
@@ -83,6 +59,45 @@ public class QuestionCreator {
 
     // Desenhar o texto centralizado na tela
     QuestionCreator.QUESTION_FONT.draw(batch, layout, centerX, 1000);
+    }
+
+    private void initQuests() {
+        // Adicionando questões hardcoded na lista questsSolved
+        quests.add(new Question(
+            "Qual municipio nao faz parte da Quarta Colonia",
+            "Erechim",
+            "Agudo"
+        ));
+        quests.add(new Question(
+            "Qual a extensao territorial da Quarta Colonia?",
+            "2.923",
+            "3.122"
+        ));
+        quests.add(new Question(
+            "Quantos habitantes possui o territori da Quarta Colonia?",
+            "58 mil",
+            "23 mil"
+        ));
+        quests.add(new Question(
+            "Qual o periodo das rochas sedimentares da Quarta Colonia?",
+            "Periodo Triassico",
+            "Periodo Jurassico"
+        ));
+        quests.add(new Question(
+            "Quantos municipios formam a Quarta Colonia?",
+            "9",
+            "8"
+        ));
+        quests.add(new Question(
+            "Qual dessas especies foi encontrada na Quarta Colonia?",
+            "Bagualosaurus agudoensis",
+            "Brachiosaurus altithorax"
+        ));
+        quests.add(new Question(
+            "Qual dessas especies foi encontrada na Quarta Colonia?",
+            "Bagualosaurus agudoensis",
+            "Brachiosaurus altithorax"
+        ));
     }
 
 }

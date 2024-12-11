@@ -1,7 +1,9 @@
 d:assets:assets:0:application/unknown:1
-t:assets.txt:assets-c55c6d4d5f6ad41ed9c40f55ad4a7396.txt:364:text/plain:1
+t:assets.txt:assets-1605c84f5d02728fc3f611ffb9b173f6.txt:389:text/plain:1
 i:background.png:background-8ddad7cb7ab8b234cc6a90112299efbb.png:298394:image/png:1
 i:bigPlatform.png:bigPlatform-f36efcbcbb30da69352499a81a2b24fa.png:8525:image/png:1
+i:deathEye.png:deathEye-c1774ab75f1e243c9f69de10eeac1ede.png:4842:image/png:1
+i:endGame.png:endGame-e8c5d0145fb5b4f0e8c186a9e7f5b5ae.png:56533:image/png:1
 d:fonts:fonts:0:application/unknown:1
 t:fonts/question.fnt:fonts/question-852bf29425b0e635595cea7c049eea5e.fnt:11101:application/unknown:1
 i:fonts/question.png:fonts/question-f77a5e9ce3587a6bde8540d0f2d8e716.png:31432:image/png:1

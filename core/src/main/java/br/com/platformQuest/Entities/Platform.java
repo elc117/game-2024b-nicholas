@@ -1,8 +1,8 @@
 package br.com.platformQuest.Entities;
 
+import br.com.platformQuest.Helper.Collisions;
 import br.com.platformQuest.Questions.Answer;
 import br.com.platformQuest.Helper.Constants;
-import br.com.platformQuest.Questions.QuestionCreator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,13 +15,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
 import java.util.Random;
 
-public class Platform extends Box2DEntity implements Update {
+public class Platform extends Box2DEntity implements Update, Collisions {
 
     private int elapsedTime = 0;
     protected long timeStart = 0;
     protected boolean timerOn = false;
     private boolean resizable = false;
-    private static final int TIME_TO_WAIT = 100;
+    private static final int TIME_TO_WAIT = 15;
     private Answer ans;
     BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/timerFont.fnt"), Gdx.files.internal("fonts/timerFont.png"), false);
 
@@ -80,7 +80,8 @@ public class Platform extends Box2DEntity implements Update {
     }
 
     private boolean isTheRightPlatform() {
-        return QuestionCreator.getQuest().getCorrectAnswer().equals(this.ans);
+        EntitiesManager instance = EntitiesManager.getInstance();
+        return instance.getQuestCreator().getActualQuest().getCorrectAnswer().equals(this.ans);
     }
 
     private void verifyTimer() {
@@ -96,7 +97,7 @@ public class Platform extends Box2DEntity implements Update {
     protected boolean isPlayerAbove() {
         float yPlayer = EntitiesManager.getInstance().getPlayer().body.getPosition().y;
         float yPlatform = this.body.getPosition().y;
-        return yPlayer + 0.5 > yPlatform;
+        return yPlayer + 1 > yPlatform+1;
     }
 
     @Override
@@ -193,13 +194,10 @@ public class Platform extends Box2DEntity implements Update {
         Random r = new Random();
         while(isPointOutOfView(points[0])){
             points[0] = r.nextFloat()*22.5f;
-            System.out.println("Ponto gerado no 1 while: " + points[0]);
         }
         while(isPointOutOfView(points[1]) || plataformIsAboveOther(points[0], points[1])){
-            System.out.println("Pontos gerados no 2 while: " + points[0] + " e " + points[1]);
             points[1] = r.nextFloat()*22.5f;
         }
-        System.out.println("Pontos gerados: " + points[0] + " e " + points[1]);
         return points;
     }
 

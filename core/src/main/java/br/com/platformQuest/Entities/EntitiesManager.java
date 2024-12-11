@@ -23,7 +23,7 @@ public class EntitiesManager {
     private static EntitiesManager instance;
     private final List<Box2DEntity> entities;
     private final Queue<Runnable> performAfterWorldStep;
-    private final QuestionCreator questCreator;
+    private QuestionCreator questCreator;
     private World wrld;
     private Player player;
     private float lastHeight = 0;
@@ -67,7 +67,8 @@ public class EntitiesManager {
         entities.stream()
             .filter((t) -> t != null)
             .forEach((t) -> t.draw(batch));
-        QuestionCreator.QUESTION_FONT.draw(batch, QuestionCreator.getQuest().getQuestion(), 100, 1000);
+        float QuestionHeight = player.getBody().getPosition().y + 500;
+        QuestionCreator.QUESTION_FONT.draw(batch, questCreator.getActualQuest().getQuestion(), 100, QuestionHeight);
     }
 
     public void updateEntities() {
@@ -100,11 +101,11 @@ public class EntitiesManager {
                 Random r = new Random();
                 int rInt = r.nextInt(100);
                 if (rInt % 2 == 0) {
-                    p1.setAns(QuestionCreator.getQuest().getCorrectAnswer());
-                    p2.setAns(QuestionCreator.getQuest().getWrongAnswer());
+                    p1.setAns(questCreator.getActualQuest().getCorrectAnswer());
+                    p2.setAns(questCreator.getActualQuest().getWrongAnswer());
                 } else {
-                    p2.setAns(QuestionCreator.getQuest().getCorrectAnswer());
-                    p1.setAns(QuestionCreator.getQuest().getWrongAnswer());
+                    p2.setAns(questCreator.getActualQuest().getCorrectAnswer());
+                    p1.setAns(questCreator.getActualQuest().getWrongAnswer());
                 }
                 entities.add(p2);
                 entities.add(p1);
@@ -116,7 +117,7 @@ public class EntitiesManager {
         //deleta plataforma errada
         entities.stream()
             .filter((t) -> t instanceof Platform)
-            .filter((t) -> QuestionCreator.getQuest().getWrongAnswer().equals(((Platform) t).getAns()))
+            .filter((t) -> questCreator.getActualQuest().getWrongAnswer().equals(((Platform) t).getAns()))
             .forEach((t) -> ((Platform) t).destroyObject());
 
         //seleciona nova pergunta
@@ -135,4 +136,16 @@ public class EntitiesManager {
         return player;
     }
 
+    public void destroyAll() {
+        entities.stream()
+            .forEach((t) -> t.destroyObject());
+        player = null;
+        questCreator = new QuestionCreator();
+        questCreator.selectRandomQuest();
+        lastHeight = 0;
+    }
+
+    public QuestionCreator getQuestCreator() {
+        return questCreator;
+    }
 }
