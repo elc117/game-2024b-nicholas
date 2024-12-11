@@ -32,7 +32,8 @@ public class Main extends ApplicationAdapter {
     private World world;
     private Player player;
     public static status STATUS;
-
+    private Texture endGame;
+    private Texture win;
 
     public enum status{
         WIN,
@@ -42,6 +43,8 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
+        win = new Texture("winGame.png");
+        endGame = new Texture("endGame.png");
         Main.STATUS = status.RUNNING;
         Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setVolume(0.3f);
@@ -95,7 +98,7 @@ public class Main extends ApplicationAdapter {
             } else {
                 drawWinningScreen();
             }
-            
+
         }
     }
 
@@ -122,6 +125,9 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
+        background.dispose();
+        endGame.dispose();
+        win.dispose();
     }
 
     public void input() {
@@ -153,8 +159,7 @@ public class Main extends ApplicationAdapter {
     private void drawGameOverScreen() {
         ScreenUtils.clear(Color.BLACK);
         batch.begin();
-        Texture tex = new Texture("endGame.png");
-        batch.draw(tex, camera.position.x - Constants.WIDTH / 2, camera.position.y - Constants.HEIGHT / 2);
+        batch.draw(endGame, camera.position.x - Constants.WIDTH / 2, camera.position.y - Constants.HEIGHT / 2);
         batch.end();
 
     }
@@ -170,8 +175,7 @@ public class Main extends ApplicationAdapter {
         private void drawWinningScreen() {
         ScreenUtils.clear(Color.BLACK);
         batch.begin();
-        Texture tex = new Texture("winGame.png");
-        batch.draw(tex, camera.position.x - Constants.WIDTH / 2, camera.position.y - Constants.HEIGHT / 2);
+        batch.draw(win, camera.position.x - Constants.WIDTH / 2, camera.position.y - Constants.HEIGHT / 2);
         batch.end();
     }
 }
