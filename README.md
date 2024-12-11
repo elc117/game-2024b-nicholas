@@ -56,16 +56,22 @@ A classe EntitiesManager é uma das mais importantes do projeto, ela segue o pad
 #### CollisionsHandler
 Essa é uma classe importante para o sistema de colisões, ela implementa a interface ContactListener e "escuta" quando uma colisão entre objetos acontece, identificando os dois objetos envolvidos na colisão.
 
-### Resultado final em um diagrama
+#### QuestionCreator
+Essa classe é quem gerencia as perguntas, ela quando criada possui uma lista hardcoded com todas as perguntas do jogo, também possui um método que seleciona aleatoriamente uma dessas perguntas e "seta" como a pergunta atual, juntamente com um método que retorna a pergunta atual.
+
+## Resultado final em um diagrama
 ![diagrama em png](readmeFiles/diagram.png)
 
-## Dificuldades
+### Dificuldades
 
-### Texturas X objetos físicos
+#### Texturas X objetos físicos
 Eu demorei um tempo relativo para conseguir sincronizar a textura da imagem com seu corpo físico do Box2D, isso se deve pela necessidade de ficar convertendo pixels de metros e de metros para pixels e também por que ao solicitar o ponto de um objeto físico, (body.getPosition()) o ponto retornado era em relação ao centro da figura geométrica, enquanto que ao tratar e desenhar texturas, o ponto inicial é na origem da textura, ou seja o ponto mais a esquerda e mais pra baixo da textura. Felizmente o Box2D possui uma classe chamada **Box2DDebugRenderer** que desenha visualmente os corpos físicos, o chatGpt me informou isso a partir do prompt "como posso ver o body? o meu player agora não está aparecendo mais". Assim pude realizar ajustes até que a textura e o corpo físico se alinhassem.
 
-### Pulo do jogador
+#### Pulo do jogador
 Esse ainda é um tema sensível, pois o jogo ainda não está com o pulo da forma que eu desejo. Minha preocupação inicial era fazer com que o player não pudesse ficar pulando infinitamente, o que nas primeiras versões acontecia. Diante disso, criei uma condição para que o player apenas pule quando sua velocidade linear no eixo y é igual a 0, dessa forma sei que o player está parado. No entanto, percebe-se que o comportamento do pulo têm alguns defeitos, como demorar para pular. Havia pensado em criar uma flag que ao detectar colisão entre uma plataforma e o player passa para verdadeira, permitindo o pulo, e ao detectar o fim de uma colisão (através do método endContact() da interface ContactListener) setasse a flag para false, impedindo o pulo, mas isso ficou pior, fazendo com que em alguns casos o jogador não conseguisse mais pular.
 
-### "Avançar de nível"
-Um problema que tive na minha ideia inicialmente seria como tornar possível para que o jogador avançasse através das plataformas.
+#### "Avançar de nível"
+Um problema que tive na minha ideia inicialmente seria como tornar possível para que o jogador avançasse através das plataformas. Visto que poderiam existir casos em que a plataforma correta ficasse diretamente acima do jogador e a partir disso eu precisaria fazer cálculos para gerar posições para as plataformas que tornassem possível o jogador chegar até acima delas. Diante disso cheguei na ideia de estender a plataforma correta.
+
+#### "jogo estático X jogo dinâmico"
+Como eu não queria um jogo onde eu precissase realizar um "level design" tentei fazer com que as coisas fossem geradas aleatoriamente seguindo alguns critérios. Isso trouxe algumas complicações, principalmente no desenho das respostas, pois as respostas são geradas pseudo-randomicamente com base em um vetor de perguntas. Calcular a posição correta das respostas em relação as plataformas foi algo difícil o qual tive que recorrer ao chat gpt com o seguinte prompt "Como fazer com que a escrita nunca saia da tela vísivel e esteja centralizada?". No entanto, mesmo com o código gerado pelo chatgpt, essa ainda precisa de polimento.
