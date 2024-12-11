@@ -30,6 +30,7 @@ public class Platform extends Box2DEntity implements Update, Collisions {
         this.bodyDef = new BodyDef();
         this.bodyDef.type = BodyDef.BodyType.StaticBody;
         this.bodyDef.position.set(x, y);
+        this.bodyDef.fixedRotation = true;
         createBody();
     }
 

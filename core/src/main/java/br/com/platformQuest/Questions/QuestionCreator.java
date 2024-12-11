@@ -4,6 +4,7 @@
  */
 package br.com.platformQuest.Questions;
 
+import br.com.platformQuest.Main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -36,7 +37,9 @@ public class QuestionCreator {
             int nextInt = r.nextInt(quests.size());
             quest = quests.get(nextInt);
             quests.remove(nextInt);
-        }        
+        } else {
+            Main.STATUS = Main.status.WIN;
+        }
     }
 
     public void draw(SpriteBatch batch){
@@ -64,39 +67,34 @@ public class QuestionCreator {
     private void initQuests() {
         // Adicionando questões hardcoded na lista questsSolved
         quests.add(new Question(
-            "Qual municipio nao faz parte da Quarta Colonia",
+            "Qual municipio nao faz \n parte da Quarta Colonia",
             "Erechim",
             "Agudo"
         ));
         quests.add(new Question(
-            "Qual a extensao territorial da Quarta Colonia?",
+            "Qual a extensao territorial \nda Quarta Colonia?",
             "2.923",
             "3.122"
         ));
         quests.add(new Question(
-            "Quantos habitantes possui o territori da Quarta Colonia?",
+            "Quantos habitantes possui o \nterritorio da Quarta Colonia?",
             "58 mil",
             "23 mil"
         ));
         quests.add(new Question(
-            "Qual o periodo das rochas sedimentares da Quarta Colonia?",
-            "Periodo Triassico",
-            "Periodo Jurassico"
+            "Qual o periodo das rochas \nsedimentares da Quarta Colonia?",
+            "Periodo \nTriassico",
+            "Periodo \nJurassico"
         ));
         quests.add(new Question(
-            "Quantos municipios formam a Quarta Colonia?",
+            "Quantos municipios formam \na Quarta Colonia?",
             "9",
             "8"
         ));
         quests.add(new Question(
-            "Qual dessas especies foi encontrada na Quarta Colonia?",
-            "Bagualosaurus agudoensis",
-            "Brachiosaurus altithorax"
-        ));
-        quests.add(new Question(
-            "Qual dessas especies foi encontrada na Quarta Colonia?",
-            "Bagualosaurus agudoensis",
-            "Brachiosaurus altithorax"
+            "Qual dessas especies foi \nencontrada na Quarta Colonia?",
+            "Bagualosaurus \nagudoensis",
+            "Brachiosaurus \naltithorax"
         ));
     }
 

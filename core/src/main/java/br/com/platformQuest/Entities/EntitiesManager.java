@@ -4,7 +4,9 @@
  */
 package br.com.platformQuest.Entities;
 
+import br.com.platformQuest.Helper.Constants;
 import br.com.platformQuest.Questions.QuestionCreator;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
@@ -26,9 +28,11 @@ public class EntitiesManager {
     private QuestionCreator questCreator;
     private World wrld;
     private Player player;
+    private float timeUntilNextShot = 0;
     private float lastHeight = 0;
 
     private EntitiesManager() {
+        timeUntilNextShot = 5f;
         entities = new ArrayList<>();
         performAfterWorldStep = new LinkedList<>();
         this.questCreator = new QuestionCreator();
@@ -67,7 +71,7 @@ public class EntitiesManager {
         entities.stream()
             .filter((t) -> t != null)
             .forEach((t) -> t.draw(batch));
-        float QuestionHeight = player.getBody().getPosition().y + 500;
+        float QuestionHeight = lastHeight * Constants.PPM + 500;
         QuestionCreator.QUESTION_FONT.draw(batch, questCreator.getActualQuest().getQuestion(), 100, QuestionHeight);
     }
 
@@ -75,6 +79,12 @@ public class EntitiesManager {
         entities.stream()
             .filter((t) -> t instanceof Update)
             .forEach((t) -> ((Update) t).update());
+
+        timeUntilNextShot -= Gdx.graphics.getDeltaTime();
+        if (timeUntilNextShot <= 0f) {
+            shootNewDino();  // Dispara um novo dinossauro
+            resetShootingTimer();  // Reseta o timer
+        }
     }
 
     public World getWrld() {
@@ -143,9 +153,26 @@ public class EntitiesManager {
         questCreator = new QuestionCreator();
         questCreator.selectRandomQuest();
         lastHeight = 0;
+        resetShootingTimer();
     }
 
     public QuestionCreator getQuestCreator() {
         return questCreator;
+    }
+
+    private void shootNewDino() {
+        Random r = new Random();
+        int x = r.nextInt(22);
+        int y = r.nextInt(22);
+        Dino bullet = new Dino(player.getBody().getPosition().x + x, player.getBody().getPosition().y + y, wrld, new Texture("dino/velociraptor1.png"));
+        bullet.createFixture(1, 1);
+        bullet.shot();
+        entities.add(bullet);
+        System.out.println("Lancando dino! " + bullet.body.getPosition().x + "," + bullet.body.getPosition().y);
+    }
+
+    private void resetShootingTimer(){
+        Random r = new Random();
+        timeUntilNextShot = r.nextInt(5);
     }
 }

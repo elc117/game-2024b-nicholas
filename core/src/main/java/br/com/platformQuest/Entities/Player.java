@@ -5,6 +5,7 @@
 package br.com.platformQuest.Entities;
 
 import br.com.platformQuest.Helper.Constants;
+import br.com.platformQuest.Main;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -49,7 +50,6 @@ public class Player extends Box2DEntity implements Update{
         float adjustedX = (body.getPosition().x * Constants.PPM) - (texture.getWidth() / 2f);
         float adjustedY = (body.getPosition().y * Constants.PPM) - (texture.getHeight() / 2f);
 
-        // Desenhar a textura na posição ajustada
         batch.draw(texture, adjustedX, adjustedY);
     }
 
@@ -58,17 +58,15 @@ public class Player extends Box2DEntity implements Update{
     }
 
     public void jump() {
-        // Adiciona um impulso vertical (pular)
         Vector2 velocity = body.getLinearVelocity();
-        if (Math.abs(velocity.y) == 0.0f) { // Verifica se está no chão (sem velocidade vertical)
-            body.applyLinearImpulse(new Vector2(0, 28f), body.getWorldCenter(), true);
+        if (Math.abs(velocity.y) == 0.0f) {
+            body.applyLinearImpulse(new Vector2(0, 80f), body.getWorldCenter(), true);
         }
     }
 
     public void moveLeft() {
-        // Aplica uma força para mover à esquerda
         Vector2 velocity = body.getLinearVelocity();
-        if (velocity.x > -4) { // Limita a velocidade para -2 unidades/s
+        if (velocity.x > -4) {
             body.applyLinearImpulse(new Vector2(-3f, 0), body.getWorldCenter(), true);
         }
     }
@@ -86,6 +84,9 @@ public class Player extends Box2DEntity implements Update{
         if(body.getPosition().y < 0) {
             System.out.println("Player died!");
             live = false;
+        }
+        if(!live){
+            Main.STATUS = Main.status.DEFEAT;
         }
     }
 
