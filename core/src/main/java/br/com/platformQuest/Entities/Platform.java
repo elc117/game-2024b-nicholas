@@ -98,7 +98,7 @@ public class Platform extends Box2DEntity implements Update, Collisions {
     protected boolean isPlayerAbove() {
         float yPlayer = EntitiesManager.getInstance().getPlayer().body.getPosition().y;
         float yPlatform = this.body.getPosition().y;
-        return yPlayer + 1 > yPlatform+1;
+        return yPlayer + 1 > yPlatform + 1;
     }
 
     @Override
@@ -190,28 +190,28 @@ public class Platform extends Box2DEntity implements Update, Collisions {
         this.resizable = resizable;
     }
 
-    public static float[] generateNewPositions(){
-        float[] points = {-1f,-1f};
+    public static float[] generateNewPositions() {
+        float[] points = {-1f, -1f};
         Random r = new Random();
-        while(isPointOutOfView(points[0])){
-            points[0] = r.nextFloat()*22.5f;
+        while (isPointOutOfView(points[0])) {
+            points[0] = r.nextFloat() * 22.5f;
         }
-        while(isPointOutOfView(points[1]) || plataformIsAboveOther(points[0], points[1])){
-            points[1] = r.nextFloat()*22.5f;
+        while (isPointOutOfView(points[1]) || plataformIsAboveOther(points[0], points[1])) {
+            points[1] = r.nextFloat() * 22.5f;
         }
         return points;
     }
 
-    private static boolean isPointOutOfView(float p){
+    private static boolean isPointOutOfView(float p) {
         return p + 2 > 22.5f || p - 2 < 0;
     }
 
-    private static boolean plataformIsAboveOther(float otherPlat, float p){
-        if(p > otherPlat){
+    private static boolean plataformIsAboveOther(float otherPlat, float p) {
+        if (p > otherPlat) {
             return (p - otherPlat) < 6;
-        } else if(otherPlat > p){
+        } else if (otherPlat > p) {
             return (otherPlat - p) < 6;
-        } else if(otherPlat == p){
+        } else if (otherPlat == p) {
             return true;
         } else {
             System.out.println("Caso misterioso que nunca deve ocorrer!");

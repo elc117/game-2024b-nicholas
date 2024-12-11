@@ -14,16 +14,16 @@ import com.badlogic.gdx.physics.box2d.Manifold;
  *
  * @author zorte
  */
-public class CollisionsHandler implements ContactListener{
+public class CollisionsHandler implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
         Object objA = contact.getFixtureA().getUserData();
         Object objB = contact.getFixtureB().getUserData();
-        if(objA instanceof Collisions && objB instanceof Player){
-            ((Collisions)objA).collisionWithPlayer();
-        } else if (objA instanceof Player && objB instanceof Collisions){
-            ((Collisions)objB).collisionWithPlayer();
+        if (objA instanceof Collisions && objB instanceof Player) {
+            ((Collisions) objA).collisionWithPlayer();
+        } else if (objA instanceof Player && objB instanceof Collisions) {
+            ((Collisions) objB).collisionWithPlayer();
         }
     }
 

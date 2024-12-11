@@ -40,7 +40,7 @@ public class Dino extends Box2DEntity implements Update, Collisions{
         fixture.shape = shape;
         fixture.density = 1f;
         fixture.friction = 0.1f;
-        fixture.restitution = 0.3f;
+        fixture.restitution = 0.5f;
 
         body.createFixture(fixture).setUserData(this);
     }

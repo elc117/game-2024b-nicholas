@@ -10,8 +10,8 @@ i:endGame.png:endGame-e8c5d0145fb5b4f0e8c186a9e7f5b5ae.png:56533:image/png:1
 d:fonts:fonts:0:application/unknown:1
 t:fonts/question.fnt:fonts/question-852bf29425b0e635595cea7c049eea5e.fnt:11101:application/unknown:1
 i:fonts/question.png:fonts/question-f77a5e9ce3587a6bde8540d0f2d8e716.png:31432:image/png:1
-t:fonts/timerFont.fnt:fonts/timerFont-f6e091535f6ff0dc60d3fa1670ff3a27.fnt:11102:application/unknown:1
-i:fonts/timerFont.png:fonts/timerFont-58629196ce80b5d50efd81f90cca168e.png:14316:image/png:1
+t:fonts/timerFont.fnt:fonts/timerFont-70bc67f847c31f671862abe067630dca.fnt:92535:application/unknown:1
+i:fonts/timerFont.png:fonts/timerFont-0630148a0c5e6c79b5a60ab5336024b4.png:122282:image/png:1
 b:hs_err_pid22932.log:hs_err_pid22932-b3cab726f85235d300202432ef4b2e5d.log:171717:application/unknown:1
 i:libgdx.png:libgdx-3708f33d27b8977682d1bc8504e6a821.png:2458:image/png:1
 i:platform.png:platform-f45d57014a3f14cc3b923fe29586f3a1.png:15695:image/png:1

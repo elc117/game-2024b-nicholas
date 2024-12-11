@@ -40,9 +40,10 @@ public class Player extends Box2DEntity implements Update{
         fixture.density = 1f;
         fixture.friction = 0.7f;
         fixture.restitution = 0.1f;
-        
+
         // Criando o fixture e aplicando no corpo
         body.createFixture(fixture).setUserData(this);
+        shape.dispose();
     }
 
     @Override
@@ -59,7 +60,7 @@ public class Player extends Box2DEntity implements Update{
 
     public void jump() {
         Vector2 velocity = body.getLinearVelocity();
-        if (Math.abs(velocity.y) == 0.0f) {
+        if (Math.abs(velocity.y) <= 0.0f) {
             body.applyLinearImpulse(new Vector2(0, 80f), body.getWorldCenter(), true);
         }
     }
@@ -115,5 +116,5 @@ public class Player extends Box2DEntity implements Update{
     public void kill() {
         this.live = false;
     }
-    
+
 }
