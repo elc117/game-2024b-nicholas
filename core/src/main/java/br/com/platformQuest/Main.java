@@ -70,7 +70,7 @@ public class Main extends ApplicationAdapter {
         player = new Player(15, 10, world, new Texture("player/players.png"));
         player.createFixture(1,1.5625f);
 
-        BasePlatform basePlatform = new BasePlatform(Constants.WIDTH / Constants.PPM / 2, 0, world, new Texture("bigPlatform.png"));
+        BasePlatform basePlatform = new BasePlatform(Constants.WIDTH / Constants.PPM / 2, 2, world, new Texture("bigPlatform.png"));
         basePlatform.createFixture(Constants.WIDTH / 2 / Constants.PPM, 0.5f);
 
         EntitiesManager eManager = EntitiesManager.getInstance();

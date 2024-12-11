@@ -23,10 +23,11 @@ public class Platform extends Box2DEntity implements Update, Collisions {
     private boolean resizable = false;
     private static final int TIME_TO_WAIT = 15;
     private Answer ans;
-    BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/timerFont.fnt"), Gdx.files.internal("fonts/timerFont.png"), false);
+    BitmapFont font;
 
     public Platform(float x, float y, World world, Texture tex) {
         super(x, y, world, tex);
+        font = new BitmapFont(Gdx.files.internal("fonts/timerFont.fnt"), Gdx.files.internal("fonts/timerFont.png"), false);
         this.bodyDef = new BodyDef();
         this.bodyDef.type = BodyDef.BodyType.StaticBody;
         this.bodyDef.position.set(x, y);
@@ -98,7 +99,7 @@ public class Platform extends Box2DEntity implements Update, Collisions {
     protected boolean isPlayerAbove() {
         float yPlayer = EntitiesManager.getInstance().getPlayer().body.getPosition().y;
         float yPlatform = this.body.getPosition().y;
-        return yPlayer + 1 > yPlatform + 1;
+        return yPlayer - 1.5625f > yPlatform + 1;
     }
 
     @Override
