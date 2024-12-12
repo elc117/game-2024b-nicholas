@@ -75,3 +75,24 @@ Um problema que tive na minha ideia inicialmente seria como tornar possível par
 
 #### "jogo estático X jogo dinâmico"
 Como eu não queria um jogo onde eu precissase realizar um "level design" tentei fazer com que as coisas fossem geradas aleatoriamente seguindo alguns critérios. Isso trouxe algumas complicações, principalmente no desenho das respostas, pois as respostas são geradas pseudo-randomicamente com base em um vetor de perguntas. Calcular a posição correta das respostas em relação as plataformas foi algo difícil o qual tive que recorrer ao chat gpt com o seguinte prompt "Como fazer com que a escrita nunca saia da tela vísivel e esteja centralizada?". No entanto, mesmo com o código gerado pelo chatgpt, essa ainda precisa de polimento.
+
+## Referências
+
+#### Créditos:
+[música de fundo](https://freesound.org/people/TiagoThanos/sounds/583100/)
+[como criar fontes](https://libgdx.com/wiki/tools/hiero)
+[Evitar que bodys girem](https://stackoverflow.com/questions/14537066/prevent-body-from-rotating-in-box2d)
+[doc do Box2D](https://box2d.org/)
+
+#### Prompts(alguns):
+"Como fazer com que a escrita nunca saia da tela vísivel e esteja centralizada?"
+"como eu posso definir a massa de uma entidade no box2d"
+"Compiling module br.com.platformQuest.GdxDefinition
+   Tracing compile failure path for type 'br.com.platformQuest.Questions.QuestionCreator'
+      [ERROR] Errors in 'file:/C:/Users/zorte/Documents/paradigmas/trabFinal/core/src/main/java/br/com/platformQuest/Questions/QuestionCreator.java'
+         [ERROR] Line 55: The method nextInt(int) in the type Random is not applicable for the arguments (int, int)
+   [ERROR] Aborting compile due to errors in some input files"
+"implementações de Queue para o java 17"
+"Assertion failed: m_world->IsLocked() == false, file /home/runner/work/libgdx/libgdx/extensions/gdx-box2d/gdx-box2d/jni/Box2D/Dynamics/b2Body.cpp, line 115"
+"Como posso tornar o meu jogo de plataforma infinito para cima?"
+"Como eu posso centralizar a textura com o body? "
