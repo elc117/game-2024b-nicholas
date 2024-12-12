@@ -10,7 +10,7 @@ O objetivo do jogo é pular em plataformas que representam as respostas para a p
 #### Controles
 | Tecla      | Movimento          |
 |------------|--------------------|
-| **espaço**      | Pular    |
+| **↑**      | Pular    |
 | **←**      | Mover para a esquerda |
 | **→**      | Mover para a direita |
 |**R**|Reinicia(somente quando morto ou vitorioso)|
